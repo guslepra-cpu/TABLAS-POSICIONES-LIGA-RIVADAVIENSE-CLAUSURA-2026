@@ -283,7 +283,7 @@
 
   <script>
     const BASE_URL = "https://1drv.ms/x/c/b90d047e400182f5/IQTXrfcP4AjlRqM54eRwl4MLAcgV_COvlDoyNlF1P03_2bk?em=2&wdAllowInteractivity=False&Item=";
-    const PARAMS = "&wdHideGridlines=True&wdInConfigurator=True";
+    const PARAMS = "&wdHideGridlines=True&wdInConfigurator=True&wdInConfigurator=True";
 
     const DATA_VIEWS = {
       primeraA: [
@@ -320,8 +320,8 @@
     const loader = document.getElementById("loader");
 
     function buildEmbedUrl(sheetName) {
-      const encodedItem = encodeURIComponent(`'${sheetName}'!Área_de_impresión`);
-      return `${BASE_URL}${encodedItem}${PARAMS}`;
+      const encodedSheet = encodeURIComponent(sheetName);
+      return `${BASE_URL}'${encodedSheet}'!%C3%81rea_de_impresi%C3%B3n${PARAMS}`;
     }
 
     function loadSheet(divKey, index) {
