@@ -6,15 +6,15 @@
   <title>Posiciones y Cruces - Liga Rivadaviense</title>
   <style>
     :root {
-      --bg-color: #f1f5f9;
+      --bg-color: #f4f4f5;
       --card-bg: #ffffff;
-      --primary: #0f172a;
-      --primary-light: #1e3a8a;
-      --accent: #2563eb;
-      --pdf-btn: #dc2626;
-      --text-main: #1e293b;
-      --text-muted: #64748b;
-      --border: #e2e8f0;
+      --liga-orange: #ff8e31;
+      --liga-orange-dark: #ea580c;
+      --liga-orange-soft: #fff7ed;
+      --liga-black: #111827;
+      --text-main: #18181b;
+      --text-muted: #52525b;
+      --border: #e4e4e7;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -31,16 +31,44 @@
       margin: 0 auto;
     }
 
+    /* Encabezado con el naranja oficial del escudo y negro */
     header {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      background: linear-gradient(135deg, var(--liga-black) 0%, #27272a 45%, var(--liga-orange-dark) 100%);
+      border-bottom: 4px solid var(--liga-orange);
       color: #ffffff;
-      padding: 20px 16px;
+      padding: 18px 20px;
       border-radius: 12px 12px 0 0;
-      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
     }
 
-    header h1 { font-size: 1.45rem; font-weight: 700; margin-bottom: 4px; }
-    header p { font-size: 0.88rem; color: #cbd5e1; }
+    .header-crest {
+      width: 64px;
+      height: auto;
+      filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.35));
+      flex-shrink: 0;
+    }
+
+    .header-text {
+      text-align: left;
+    }
+
+    header h1 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    header p {
+      font-size: 0.9rem;
+      color: #fed7aa;
+      font-weight: 600;
+    }
 
     .controls-panel {
       background-color: #ffffff;
@@ -56,7 +84,7 @@
       font-size: 0.72rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.05em;
       color: var(--text-muted);
       margin-bottom: 6px;
     }
@@ -70,19 +98,25 @@
     .tab-btn {
       padding: 10px 8px;
       border: 1px solid var(--border);
-      background-color: #f8fafc;
+      background-color: #fafafa;
       color: var(--text-main);
-      font-weight: 600;
-      font-size: 0.88rem;
+      font-weight: 700;
+      font-size: 0.9rem;
       border-radius: 8px;
       cursor: pointer;
-      transition: 0.15s;
+      transition: all 0.16s ease;
+    }
+
+    .tab-btn:hover {
+      background-color: var(--liga-orange-soft);
+      border-color: var(--liga-orange);
     }
 
     .tab-btn.active {
-      background-color: var(--primary);
-      color: #ffffff;
-      border-color: var(--primary);
+      background-color: var(--liga-orange);
+      color: #111827;
+      border-color: var(--liga-orange-dark);
+      box-shadow: 0 2px 6px rgba(234, 88, 12, 0.3);
     }
 
     .sub-tabs {
@@ -94,21 +128,27 @@
     }
 
     .sub-btn {
-      padding: 7px 14px;
-      border: 1px solid #cbd5e1;
+      padding: 7px 15px;
+      border: 1px solid #d4d4d8;
       background-color: #ffffff;
       color: var(--text-main);
       font-weight: 600;
-      font-size: 0.84rem;
+      font-size: 0.85rem;
       border-radius: 999px;
       cursor: pointer;
-      transition: 0.15s;
+      transition: all 0.16s ease;
+    }
+
+    .sub-btn:hover {
+      border-color: var(--liga-orange-dark);
+      color: var(--liga-orange-dark);
     }
 
     .sub-btn.active {
-      background-color: var(--accent);
-      color: #ffffff;
-      border-color: var(--accent);
+      background-color: var(--liga-black);
+      color: var(--liga-orange);
+      border-color: var(--liga-black);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     }
 
     .board-card {
@@ -128,13 +168,15 @@
       gap: 8px;
       margin-bottom: 12px;
       padding-bottom: 10px;
-      border-bottom: 1px solid #f1f5f9;
+      border-bottom: 2px solid var(--liga-orange-soft);
     }
 
     .current-title {
-      font-weight: 700;
-      color: var(--primary);
-      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--liga-black);
+      font-size: 0.98rem;
+      border-left: 4px solid var(--liga-orange);
+      padding-left: 8px;
     }
 
     .action-buttons {
@@ -147,10 +189,10 @@
     .zoom-btn {
       padding: 6px 12px;
       font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--accent);
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
+      font-weight: 700;
+      color: var(--liga-black);
+      background: var(--liga-orange-soft);
+      border: 1px solid var(--liga-orange);
       border-radius: 6px;
       cursor: pointer;
     }
@@ -158,10 +200,10 @@
     .pdf-btn {
       padding: 6px 12px;
       font-size: 0.78rem;
-      font-weight: 600;
+      font-weight: 700;
       color: #ffffff;
-      background: var(--pdf-btn);
-      border: 1px solid #b91c1c;
+      background: var(--liga-orange-dark);
+      border: 1px solid #c2410c;
       border-radius: 6px;
       cursor: pointer;
       text-decoration: none;
@@ -169,14 +211,54 @@
     }
 
     .pdf-btn:hover {
-      background: #b91c1c;
+      background: #c2410c;
     }
 
     .table-wrapper {
+      position: relative;
       width: 100%;
+      min-height: 360px;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
       background: #ffffff;
+      border-radius: 8px;
+    }
+
+    /* Pantalla de carga con el escudo de la Liga */
+    .crest-loader {
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.96);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      z-index: 10;
+      transition: opacity 0.25s ease;
+    }
+
+    .crest-loader.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .crest-loader img {
+      width: 96px;
+      height: auto;
+      animation: pulseCrest 1.3s ease-in-out infinite;
+    }
+
+    .crest-loader span {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--liga-black);
+      letter-spacing: 0.02em;
+    }
+
+    @keyframes pulseCrest {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.08); opacity: 0.8; }
     }
 
     .scale-box {
@@ -206,8 +288,13 @@
 
     @media (max-width: 640px) {
       body { padding: 6px; }
-      header { padding: 16px 12px; }
-      header h1 { font-size: 1.2rem; }
+      header {
+        padding: 14px 12px;
+        gap: 12px;
+      }
+      .header-crest { width: 52px; }
+      header h1 { font-size: 1.18rem; }
+      header p { font-size: 0.8rem; }
       .division-tabs { grid-template-columns: repeat(2, 1fr); }
       .board-card { padding: 8px; }
       .pdf-tip { text-align: center; }
@@ -217,8 +304,11 @@
 <body>
   <div class="container">
     <header>
-      <h1>Tablas de Posiciones y Cruces</h1>
-      <p>Liga Rivadaviense de Fútbol • Clausura 2026</p>
+      <img src="1615819703090.png" alt="Escudo Liga Rivadaviense de Fútbol" class="header-crest">
+      <div class="header-text">
+        <h1>Tablas de Posiciones y Cruces</h1>
+        <p>Liga Rivadaviense de Fútbol • Clausura 2026</p>
+      </div>
     </header>
 
     <section class="controls-panel">
@@ -248,6 +338,10 @@
       </div>
 
       <div class="table-wrapper" id="tableWrapper">
+        <div class="crest-loader" id="crestLoader">
+          <img src="1615819703090.png" alt="Cargando Liga Rivadaviense">
+          <span>Cargando planilla oficial...</span>
+        </div>
         <div class="scale-box" id="scaleBox">
           <iframe id="excelFrame" scrolling="no"></iframe>
         </div>
@@ -266,7 +360,6 @@
     const PARAMS_EMBED = "&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=False";
     const PARAMS_PRINT = "&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=True";
 
-    // Medidas ampliadas reales para que no se recorte ninguna columna ni llave
     const DATA_VIEWS = {
       primeraA: [
         { label: "Tabla Zona A", sheet: "TABLA PRIMERA A ZONA A", range: "A1:M19", width: 1180, height: 610 },
@@ -303,10 +396,25 @@
     const currentViewTitle = document.getElementById("currentViewTitle");
     const zoomToggleBtn = document.getElementById("zoomToggleBtn");
     const pdfDownloadBtn = document.getElementById("pdfDownloadBtn");
+    const crestLoader = document.getElementById("crestLoader");
 
     let currentDiv = "primeraA";
     let currentIndex = 0;
     let fitToScreen = true;
+    let loaderTimer = null;
+
+    function showLoader() {
+      crestLoader.classList.remove("hidden");
+      clearTimeout(loaderTimer);
+      loaderTimer = setTimeout(() => {
+        crestLoader.classList.add("hidden");
+      }, 6000);
+    }
+
+    function hideLoader() {
+      clearTimeout(loaderTimer);
+      crestLoader.classList.add("hidden");
+    }
 
     function applyResponsiveScale() {
       const item = DATA_VIEWS[currentDiv][currentIndex];
@@ -342,6 +450,7 @@
       document.title = `${titleText} - Liga Rivadaviense`;
       applyResponsiveScale();
 
+      showLoader();
       const encodedSheet = encodeURIComponent(item.sheet);
       const baseItemUrl = `${BASE_URL}'${encodedSheet}'!${item.range}`;
 
@@ -372,6 +481,7 @@
       applyResponsiveScale();
     });
 
+    excelFrame.addEventListener("load", hideLoader);
     window.addEventListener("resize", applyResponsiveScale);
 
     renderSubButtons("primeraA");
