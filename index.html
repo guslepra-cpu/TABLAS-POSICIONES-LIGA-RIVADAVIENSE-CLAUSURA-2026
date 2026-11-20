@@ -11,6 +11,7 @@
       --primary: #0f172a;
       --primary-light: #1e3a8a;
       --accent: #2563eb;
+      --pdf-btn: #dc2626;
       --text-main: #1e293b;
       --text-muted: #64748b;
       --border: #e2e8f0;
@@ -26,7 +27,7 @@
     }
 
     .container {
-      max-width: 1200px;
+      max-width: 1440px;
       margin: 0 auto;
     }
 
@@ -138,6 +139,7 @@
 
     .action-buttons {
       display: flex;
+      align-items: center;
       gap: 8px;
       flex-wrap: wrap;
     }
@@ -158,37 +160,41 @@
       font-size: 0.78rem;
       font-weight: 600;
       color: #ffffff;
-      background: #16a34a;
-      border: 1px solid #15803d;
+      background: var(--pdf-btn);
+      border: 1px solid #b91c1c;
       border-radius: 6px;
       cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
     }
 
     .pdf-btn:hover {
-      background: #15803d;
+      background: #b91c1c;
     }
 
     .table-wrapper {
       width: 100%;
-      overflow-x: hidden;
-      background: #ffffff;
-    }
-
-    .table-wrapper.scroll-mode {
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
+      background: #ffffff;
     }
 
     .scale-box {
       position: relative;
       margin: 0 auto;
-      overflow: hidden;
     }
 
     iframe {
       border: none;
       display: block;
       transform-origin: top left;
+    }
+
+    .pdf-tip {
+      margin-top: 10px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-align: right;
     }
 
     footer {
@@ -204,44 +210,7 @@
       header h1 { font-size: 1.2rem; }
       .division-tabs { grid-template-columns: repeat(2, 1fr); }
       .board-card { padding: 8px; }
-    }
-
-    /* Estilos limpios exclusivos al descargar o imprimir en PDF */
-    @media print {
-      @page {
-        size: landscape;
-        margin: 8mm;
-      }
-      body {
-        background: #ffffff;
-        padding: 0;
-      }
-      .controls-panel,
-      .action-buttons {
-        display: none !important;
-      }
-      header {
-        background: #0f172a !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-        padding: 12px;
-        border-radius: 6px 6px 0 0;
-      }
-      .board-card {
-        border: none;
-        box-shadow: none;
-        padding: 8px 0;
-      }
-      .table-wrapper,
-      .scale-box {
-        width: 100% !important;
-        height: auto !important;
-        overflow: visible !important;
-      }
-      iframe {
-        transform: none !important;
-        width: 100% !important;
-      }
+      .pdf-tip { text-align: center; }
     }
   </style>
 </head>
@@ -273,8 +242,8 @@
       <div class="status-bar">
         <span class="current-title" id="currentViewTitle">Primera A — Tabla Zona A</span>
         <div class="action-buttons">
-          <button class="zoom-btn" id="zoomToggleBtn">Ampliar tamaño (100%)</button>
-          <button class="pdf-btn" id="pdfDownloadBtn">Descargar PDF</button>
+          <button class="zoom-btn" id="zoomToggleBtn">Ampliar (100%)</button>
+          <a class="pdf-btn" id="pdfDownloadBtn" target="_blank" rel="noopener">Abrir para PDF / Imprimir</a>
         </div>
       </div>
 
@@ -283,6 +252,8 @@
           <iframe id="excelFrame" scrolling="no"></iframe>
         </div>
       </div>
+
+      <p class="pdf-tip">Para guardar en PDF: tocá <strong>Abrir para PDF / Imprimir</strong> y luego elegí <strong>Imprimir &rarr; Guardar como PDF</strong>.</p>
     </main>
 
     <footer>
@@ -292,26 +263,28 @@
 
   <script>
     const BASE_URL = "https://1drv.ms/x/c/b90d047e400182f5/IQTXrfcP4AjlRqM54eRwl4MLAcgV_COvlDoyNlF1P03_2bk?em=2&wdAllowInteractivity=False&Item=";
-    const PARAMS = "&wdHideGridlines=True&wdHideHeaders=True";
+    const PARAMS_EMBED = "&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=False";
+    const PARAMS_PRINT = "&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=True";
 
+    // Medidas ampliadas reales para que no se recorte ninguna columna ni llave
     const DATA_VIEWS = {
       primeraA: [
-        { label: "Tabla Zona A", sheet: "TABLA PRIMERA A ZONA A", range: "A1:L18", width: 840, height: 550 },
-        { label: "Tabla Zona B", sheet: "TABLA PRIMERA A ZONA B", range: "A1:L18", width: 840, height: 550 },
-        { label: "Cruces (Playoffs)", sheet: "CRUCES PRIMERA A", range: "A1:T30", width: 1180, height: 830 }
+        { label: "Tabla Zona A", sheet: "TABLA PRIMERA A ZONA A", range: "A1:M19", width: 1180, height: 610 },
+        { label: "Tabla Zona B", sheet: "TABLA PRIMERA A ZONA B", range: "A1:M19", width: 1180, height: 610 },
+        { label: "Cruces (Playoffs)", sheet: "CRUCES PRIMERA A", range: "A1:U31", width: 1520, height: 920 }
       ],
       primeraB: [
-        { label: "Tabla General", sheet: "TABLA PRIMERA B", range: "A1:L19", width: 840, height: 630 },
-        { label: "Cruces", sheet: "CRUCES PRIMERA B", range: "A1:H17", width: 1080, height: 580 }
+        { label: "Tabla General", sheet: "TABLA PRIMERA B", range: "A1:M20", width: 1180, height: 690 },
+        { label: "Cruces", sheet: "CRUCES PRIMERA B", range: "A1:H17", width: 1220, height: 620 }
       ],
       reservaA: [
-        { label: "Tabla Zona A", sheet: "TABLA RESERVA A ZONA A", range: "A1:L16", width: 840, height: 520 },
-        { label: "Tabla Zona B", sheet: "TABLA RESERVA A ZONA B", range: "A1:L16", width: 840, height: 520 },
-        { label: "Cruces (Playoffs)", sheet: "CRUCES RESERVA A", range: "A1:T30", width: 1180, height: 830 }
+        { label: "Tabla Zona A", sheet: "TABLA RESERVA A ZONA A", range: "A1:M17", width: 1180, height: 570 },
+        { label: "Tabla Zona B", sheet: "TABLA RESERVA A ZONA B", range: "A1:M17", width: 1180, height: 570 },
+        { label: "Cruces (Playoffs)", sheet: "CRUCES RESERVA A", range: "A1:U31", width: 1520, height: 920 }
       ],
       reservaB: [
-        { label: "Tabla General", sheet: "TABLA RESERVA B", range: "A1:K18", width: 820, height: 630 },
-        { label: "Cruces", sheet: "CRUCES RESERVA B", range: "A1:H17", width: 1080, height: 580 }
+        { label: "Tabla General", sheet: "TABLA RESERVA B", range: "A1:L19", width: 1150, height: 690 },
+        { label: "Cruces", sheet: "CRUCES RESERVA B", range: "A1:H17", width: 1220, height: 620 }
       ]
     };
 
@@ -347,13 +320,11 @@
         excelFrame.style.transform = `scale(${scale})`;
         scaleBox.style.width = availableWidth + "px";
         scaleBox.style.height = Math.ceil(item.height * scale) + "px";
-        tableWrapper.classList.remove("scroll-mode");
-        zoomToggleBtn.textContent = "Ampliar tamaño (100%)";
+        zoomToggleBtn.textContent = "Ampliar (100%)";
       } else {
         excelFrame.style.transform = "none";
         scaleBox.style.width = item.width + "px";
         scaleBox.style.height = item.height + "px";
-        tableWrapper.classList.add("scroll-mode");
         zoomToggleBtn.textContent = availableWidth < item.width ? "Ajustar a pantalla" : "Vista completa";
       }
     }
@@ -366,13 +337,16 @@
       document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.div === divKey));
       document.querySelectorAll(".sub-btn").forEach((btn, idx) => btn.classList.toggle("active", idx === index));
 
-      const fullTitle = `${DIVISION_NAMES[divKey]} — ${item.label}`;
-      currentViewTitle.textContent = fullTitle;
-      document.title = `${fullTitle} - Liga Rivadaviense`;
+      const titleText = `${DIVISION_NAMES[divKey]} — ${item.label}`;
+      currentViewTitle.textContent = titleText;
+      document.title = `${titleText} - Liga Rivadaviense`;
       applyResponsiveScale();
 
       const encodedSheet = encodeURIComponent(item.sheet);
-      excelFrame.src = `${BASE_URL}'${encodedSheet}'!${item.range}${PARAMS}`;
+      const baseItemUrl = `${BASE_URL}'${encodedSheet}'!${item.range}`;
+
+      excelFrame.src = `${baseItemUrl}${PARAMS_EMBED}`;
+      pdfDownloadBtn.href = `${baseItemUrl}${PARAMS_PRINT}`;
     }
 
     function renderSubButtons(divKey) {
@@ -396,10 +370,6 @@
     zoomToggleBtn.addEventListener("click", () => {
       fitToScreen = !fitToScreen;
       applyResponsiveScale();
-    });
-
-    pdfDownloadBtn.addEventListener("click", () => {
-      window.print();
     });
 
     window.addEventListener("resize", applyResponsiveScale);
