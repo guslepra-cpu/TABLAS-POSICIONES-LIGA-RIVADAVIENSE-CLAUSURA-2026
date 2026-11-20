@@ -31,7 +31,6 @@
       margin: 0 auto;
     }
 
-    /* Encabezado con el naranja oficial del escudo y negro */
     header {
       background: linear-gradient(135deg, var(--liga-black) 0%, #27272a 45%, var(--liga-orange-dark) 100%);
       border-bottom: 4px solid var(--liga-orange);
@@ -224,7 +223,6 @@
       border-radius: 8px;
     }
 
-    /* Pantalla de carga con el escudo de la Liga */
     .crest-loader {
       position: absolute;
       inset: 0;
@@ -244,7 +242,7 @@
     }
 
     .crest-loader img {
-      width: 96px;
+      width: 92px;
       height: auto;
       animation: pulseCrest 1.3s ease-in-out infinite;
     }
@@ -304,7 +302,7 @@
 <body>
   <div class="container">
     <header>
-      <img src="1615819703090.png" alt="Escudo Liga Rivadaviense de Fútbol" class="header-crest">
+      <img id="headerCrestImg" alt="Escudo Liga Rivadaviense de Fútbol" class="header-crest">
       <div class="header-text">
         <h1>Tablas de Posiciones y Cruces</h1>
         <p>Liga Rivadaviense de Fútbol • Clausura 2026</p>
@@ -339,7 +337,7 @@
 
       <div class="table-wrapper" id="tableWrapper">
         <div class="crest-loader" id="crestLoader">
-          <img src="1615819703090.png" alt="Cargando Liga Rivadaviense">
+          <img id="loaderCrestImg" alt="Cargando Liga Rivadaviense">
           <span>Cargando planilla oficial...</span>
         </div>
         <div class="scale-box" id="scaleBox">
@@ -356,6 +354,12 @@
   </div>
 
   <script>
+    // Escudo oficial incrustado directamente (no requiere subir imagen aparte)
+    const LIGA_CREST_DATA = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAG4AAAB5CAMAAADvVuTqAAAA/1BMVEXpmVegXihfXFuinZ3oxKX+nTcwLizCbSofHiJTRDZZWVmyjXPRtp+ndE/g3+H///8ZFhaqqqq/vsDBv8EAAAD8jDEDAQD9/f3+lTXq6OooJigoGA1rQRwdEw1wRSQKBwewZy0NCwuSVyfPeTJJKhRWMxhmPBvJx8j5mEg3IxQPDg4dISW5t7jX1tjzqGpMNycTEhPbgjf05dkJBgYHBASDTSPxyanu2szofif21LUKBwcXFBVYV1dlPSE1MzL0uIgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACmarY5AAAAQHRSTlP///////8O////Bv////8BQwP//wD//f//////////W/9o//////////8l//////8d//+w0f//////kCr/////cwPDUQAACWJJREFUeNrtmmd34joTgA2kbMru3hLJso0dR5JbYiCQAMmm/f9/dWfkpoDBZdn3vB+inAPENno8o2kyY1z9T4fxhfvC/f/j7q8POF5+7se9/KIHHY8353twN/Tg4/FlJ+6a/oHxeL8Dd6tOO+F45/C88sPWeINRvakRqAkfduAe8CRnPUYcx/p7nA3GiAL+VYs7yWjkgIPFcls8o1o556A04AmU4aQOh2YZ7sWx6hVUph3aM1yY9WoXbtz49QxGhCDtFNEfl9BTRtiYLhl34FoPsCFNGrCIu+2Fc6jPkLD0KQ1CULxamb3GxfrjWJLjvAQZqM4xlfutK8Pd/xZu5lAygIt9QilYus/+HI6hdA4VYgwcTh2eUNkf5+3HceGLkPKQynns0UGSRUXB+lqmt99UYLiSDuauwnjU8X1f7hXvN3AcQzT3x+AOSyk94Xuo3Lm3bHKEXsokZUTWPlXxpQ/ujWmT94+UrKUyMWZ+vu38QClc/iE7i++61ISpv+xEdmivm4fHAwdGOBdO4DmoWumcksQZwBclnAjQ80SS+MRJBINgFgaOHzjqjANhBl+WYFKScCeBoz5rwkEWojTxwerQxOGFjOEQ3HNm9Rw9jybMoQMGtgpz+8piJXzRO+ZUwjekQ+ehuroRx2lwDBoAI4fJOJN0TPAGfMTNGceYhf8LuB82oK6hcIII4uPsPg05TeYqeHvxvMlUEOdAtKA4L9wqTC049QboWyCnellSDrPimTEN40K6EHGORwOVUENDSee2wCkliEyMN+A4dAwHRYEToEGuqBA7BVO4RCZwC9KjqGaIby5mDEdK2QInOXVjgcsVZPpRQ4kDEUxm90OXuJYSlw9wAzKHoC2xMpFkIFDnqEzSrMwllUagFpygnThw+wHnYC05doDCcpBjLtESEJeFtCVcO3eK2wkzUxkoA9uNY74E8w8DHoSw3mPpkyBAFxonPAyCYDwnMsT/w0QI/ETGgQhBazL05QBuUHLiOa4zZlzC5YHfhCPss6fnMUoPYIQInzCiX1K6eeH4xfH++a6KUT59axvOWuO0Gy6rvHygcJ9HLhfbDLWtcaB8KQOO6xgEsEpYouJqSI6LSYLQU/95S3zjcMRLnAQuV2fbZgQNl+0nMq8Fr4Ajp+qjxNgmVKjDE1K9jfOMG4rN5N4WF0L4AuPnWYjKcA6EJTXhHP3eo1LApoPH4Ktv1EF3o7wOd9UKtwT7p4GKGXgcpeMD7ufSzTG8sjigEPqxFoSIDRE26I8bYPBPlJZUHvTzCiUPZgxxQEBckJW8BY51x71BJSFcrPKMajcDpRC+Hqugw7GQhvrPmONKSnU/HmpZ36m0xWWmImF2F8IEuvUpdRnL0h1eWUoH6S1R+SC7nLp6bdayaGceJOMEth2YlB3ceDDI8OrGQxWxQRiIVWysUjnkYTBRF446rgvVQGdcUXLoO7tia6drKw9XeHReV0713wHpAWdrk1ne20YheABcl/GFa1o5rWb/ozhECOFzGODwc9KM7I+DqQf8bGbb9rc7GPA+83xBmrckfXCQVfnMRogNmS2x1QDojO8F9sMx4s8UwHXt9+ErjOHZe+Iquu2J3cA+ONhrKJhrD4ejiWVNLBOGdXQxDBIg3tnenB0OBztUJQWggLJII0VT4/nCQ73e2XzH45zuOOarJXsdrY4+ptPpZQVTQIMr65nVC9gVB4kGYMnse8zIMR4wN4a1MrgSvvYBS0cclFh3n3QVb+GsxVQobdc9r+qGYwQ05Z4Z1fGpuc2zpoQn9bxOOKB9s93XqXa4FhcdPV/gAm7zuhXtnmO7w2f9iGHV8CIw1ug9se8G7DeeZzIPZBuasXbEWKWjqA6HPBBw84lVBxzz70CTplEd+Fjg7NEosrZxlpmivWz4X3tlsjks/8ysVKlgakzSySf5FM4yR2DEXm8cuIAdTabFoq11wCStBFwsLn9Yijd07W8+66VMCCa2O1pPzIUCfmyYiJXCEi6eP6ZxHBPj2crGEPTxSZ3t1w48bpjpbEXI0ZY9mpPL0kGejHUmXrrpfW1xaCd2ms+8vjRrxvS4TDxPsVWq0+6lzJntvJaai2pxmtqePjJeBOmB99iSwMo5aam3ST1OH8+leLMeGy4wy2Fl6FYjrlBn+jk3tMMxgmZZTnxkNkv3tCqMs/I91haHhlJpMK3FGaRGPHPk2O/VHqYl7uzOfjU74QjJxPtHi5xtcWiXIy1I1eLiz7Snqal4Z3piaIXDpfuWdsQRI8oWz7G9jjhh60u3A8c2pYugSLMW323NFdrhwOvOzAbcenNDuYZwkEbrgR432+Gg+vIacFG0MvRnDLkjRIbQs1573KKa+mO9FZ/TH1hkxqVwT9M8an4IiO3zjjhbxx3pqTWLoYW8q7jwukWeg1ZPM62GcPbhAh33XEy+UvVlBbSif7Sg9oHfeSLrnGatSYXLfn3YicPnYOqypWuPi8hVVA/xUQaMNioHSL9PpMivYJnGzE5E/gu03Il7yZ4oZg9UlvhbQD5b5V4AtCZpVFO2l7LBMJJcOjZQTyEfan+mzxs6XB8fynBKpTHZDsTGKqqrM1PrMw6fRDLmZS0dJzsaSG6LnwyYerq3mhxpqty1RVBVdDrRcBeJ6+JmN/utdEM2vT3m/qEQEB+lRWiA1rQNLtJw5nf8rYRkotGbvb1GeT9OIMBfRsoI4yac8u1Ik86m1MtWjT7+1dDa9PJY9tG81mWZRpyZVp04v04aG7f+LhuO3E9usHt7t4Eblm0/1636xF4e8utHNWkmrqNpOPPHeyHaedu2tELAIRr9Rxecmea0h5cOXXD3eb8YVkeLfbickjuCGb3u1ePuprvbXKPvIwzQmp/X0TKcORnuM5GGHr/r3EaHR8YuXGkfI4BZI7dJj3tbCk+KJfS0JBrX0RajtTl6b9ZjQwdjsYQVkE3X27T1lHyf5Vfe/PydhsnCKRxOYmBBCioTa0lbxadBm0Vr1Z9ZLGFysSiS60SnraciLGAvB2gHPS+A70XhOdEi8pExLizk9kDdp6XNDNNCwDRSu/GVkcfiZgvp0uxa2swwUmpEYAqFHy9hP68OiAO3L4Cv/xbrdlnCbs4P38pbxBn6ihKCVxex+Obk6urwODDSh1KlFexXN1inRuUSaHey/f590dePWt9sD1jXNuy/S+BDH1j3ru/zm8cOXn2AJvPzm96wr479L9wXTo3/ADforsy5hFntAAAAAElFTkSuQmCC";
+
+    document.getElementById("headerCrestImg").src = LIGA_CREST_DATA;
+    document.getElementById("loaderCrestImg").src = LIGA_CREST_DATA;
+
     const BASE_URL = "https://1drv.ms/x/c/b90d047e400182f5/IQTXrfcP4AjlRqM54eRwl4MLAcgV_COvlDoyNlF1P03_2bk?em=2&wdAllowInteractivity=False&Item=";
     const PARAMS_EMBED = "&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=False";
     const PARAMS_PRINT = "&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=True";
