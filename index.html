@@ -268,6 +268,17 @@
       transform-origin: top left;
     }
 
+    .pdf-help-bar {
+      margin-top: 12px;
+      padding: 8px 12px;
+      background-color: var(--liga-orange-soft);
+      border: 1px solid #fed7aa;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      color: var(--liga-black);
+      text-align: center;
+    }
+
     footer {
       text-align: center;
       margin-top: 18px;
@@ -286,52 +297,6 @@
       header p { font-size: 0.8rem; }
       .division-tabs { grid-template-columns: repeat(2, 1fr); }
       .board-card { padding: 8px; }
-    }
-
-    /* Configuración limpia de impresión / PDF en hoja horizontal */
-    @page {
-      size: landscape;
-      margin: 8mm;
-    }
-
-    @media print {
-      body {
-        background: #ffffff !important;
-        padding: 0 !important;
-      }
-      .controls-panel,
-      .action-buttons,
-      .crest-loader,
-      footer {
-        display: none !important;
-      }
-      header {
-        background: #111827 !important;
-        border-bottom: 3px solid #ff8e31 !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-        border-radius: 6px;
-        padding: 10px 14px;
-        margin-bottom: 8px;
-      }
-      .header-crest {
-        width: 44px;
-      }
-      .board-card {
-        border: none !important;
-        box-shadow: none !important;
-        padding: 0 !important;
-      }
-      .table-wrapper,
-      .scale-box {
-        overflow: visible !important;
-        width: 100% !important;
-        height: auto !important;
-        min-height: 0 !important;
-      }
-      iframe {
-        transform: none !important;
-      }
     }
   </style>
 </head>
@@ -367,7 +332,7 @@
         <span class="current-title" id="currentViewTitle">Primera A — Tabla Zona A</span>
         <div class="action-buttons">
           <button class="zoom-btn" id="zoomToggleBtn">Ampliar (100%)</button>
-          <button class="pdf-btn" id="pdfDownloadBtn">Descargar PDF / Imprimir</button>
+          <button class="pdf-btn" id="pdfDownloadBtn">Generar PDF Oficial</button>
         </div>
       </div>
 
@@ -379,6 +344,10 @@
         <div class="scale-box" id="scaleBox">
           <iframe id="excelFrame" scrolling="no"></iframe>
         </div>
+      </div>
+
+      <div class="pdf-help-bar">
+        <strong>Cómo bajar el PDF:</strong> Tocá <strong>Generar PDF Oficial</strong> y, en la barra inferior derecha de la planilla que se abre, presioná el ícono de <strong>Imprimir / PDF</strong>.
       </div>
     </main>
 
@@ -395,25 +364,26 @@
 
     const BASE_URL = "https://1drv.ms/x/c/b90d047e400182f5/IQTXrfcP4AjlRqM54eRwl4MLAcgV_COvlDoyNlF1P03_2bk?em=2&wdAllowInteractivity=False&Item=";
     const PARAMS_EMBED = "&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=False";
+    const PARAMS_PRINT = "&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=True";
 
     const DATA_VIEWS = {
       primeraA: [
-        { label: "Tabla Zona A", sheet: "TABLA PRIMERA A ZONA A", range: "A1:M19", width: 1180, height: 610, printZoom: 0.82 },
-        { label: "Tabla Zona B", sheet: "TABLA PRIMERA A ZONA B", range: "A1:M19", width: 1180, height: 610, printZoom: 0.82 },
-        { label: "Cruces (Playoffs)", sheet: "CRUCES PRIMERA A", range: "A1:U31", width: 1520, height: 920, printZoom: 0.62 }
+        { label: "Tabla Zona A", sheet: "TABLA PRIMERA A ZONA A", range: "A1:M19", width: 1180, height: 610 },
+        { label: "Tabla Zona B", sheet: "TABLA PRIMERA A ZONA B", range: "A1:M19", width: 1180, height: 610 },
+        { label: "Cruces (Playoffs)", sheet: "CRUCES PRIMERA A", range: "A1:U31", width: 1520, height: 920 }
       ],
       primeraB: [
-        { label: "Tabla General", sheet: "TABLA PRIMERA B", range: "A1:M20", width: 1180, height: 690, printZoom: 0.78 },
-        { label: "Cruces", sheet: "CRUCES PRIMERA B", range: "A1:H17", width: 1220, height: 620, printZoom: 0.78 }
+        { label: "Tabla General", sheet: "TABLA PRIMERA B", range: "A1:M20", width: 1180, height: 690 },
+        { label: "Cruces", sheet: "CRUCES PRIMERA B", range: "A1:H17", width: 1220, height: 620 }
       ],
       reservaA: [
-        { label: "Tabla Zona A", sheet: "TABLA RESERVA A ZONA A", range: "A1:M17", width: 1180, height: 570, printZoom: 0.82 },
-        { label: "Tabla Zona B", sheet: "TABLA RESERVA A ZONA B", range: "A1:M17", width: 1180, height: 570, printZoom: 0.82 },
-        { label: "Cruces (Playoffs)", sheet: "CRUCES RESERVA A", range: "A1:U31", width: 1520, height: 920, printZoom: 0.62 }
+        { label: "Tabla Zona A", sheet: "TABLA RESERVA A ZONA A", range: "A1:M17", width: 1180, height: 570 },
+        { label: "Tabla Zona B", sheet: "TABLA RESERVA A ZONA B", range: "A1:M17", width: 1180, height: 570 },
+        { label: "Cruces (Playoffs)", sheet: "CRUCES RESERVA A", range: "A1:U31", width: 1520, height: 920 }
       ],
       reservaB: [
-        { label: "Tabla General", sheet: "TABLA RESERVA B", range: "A1:L19", width: 1150, height: 690, printZoom: 0.78 },
-        { label: "Cruces", sheet: "CRUCES RESERVA B", range: "A1:H17", width: 1220, height: 620, printZoom: 0.78 }
+        { label: "Tabla General", sheet: "TABLA RESERVA B", range: "A1:L19", width: 1150, height: 690 },
+        { label: "Cruces", sheet: "CRUCES RESERVA B", range: "A1:H17", width: 1220, height: 620 }
       ]
     };
 
@@ -438,6 +408,7 @@
     let currentIndex = 0;
     let fitToScreen = true;
     let loaderTimer = null;
+    let currentPrintUrl = "";
 
     function showLoader() {
       crestLoader.classList.remove("hidden");
@@ -456,7 +427,6 @@
       const item = DATA_VIEWS[currentDiv][currentIndex];
       const availableWidth = tableWrapper.clientWidth;
 
-      excelFrame.style.zoom = "";
       excelFrame.style.width = item.width + "px";
       excelFrame.style.height = item.height + "px";
 
@@ -474,21 +444,6 @@
       }
     }
 
-    function printCleanPdf() {
-      const item = DATA_VIEWS[currentDiv][currentIndex];
-      // Quita el transform antes de imprimir para evitar que Chrome/Edge dejen el iframe en blanco
-      excelFrame.style.transform = "none";
-      excelFrame.style.zoom = item.printZoom;
-      scaleBox.style.width = "100%";
-      scaleBox.style.height = "auto";
-
-      setTimeout(() => {
-        window.print();
-      }, 150);
-    }
-
-    window.addEventListener("afterprint", applyResponsiveScale);
-
     function loadSheet(divKey, index) {
       currentDiv = divKey;
       currentIndex = index;
@@ -504,7 +459,10 @@
 
       showLoader();
       const encodedSheet = encodeURIComponent(item.sheet);
-      excelFrame.src = `${BASE_URL}'${encodedSheet}'!${item.range}${PARAMS_EMBED}`;
+      const baseItemUrl = `${BASE_URL}'${encodedSheet}'!${item.range}`;
+
+      excelFrame.src = `${baseItemUrl}${PARAMS_EMBED}`;
+      currentPrintUrl = `${baseItemUrl}${PARAMS_PRINT}`;
     }
 
     function renderSubButtons(divKey) {
@@ -530,7 +488,10 @@
       applyResponsiveScale();
     });
 
-    pdfDownloadBtn.addEventListener("click", printCleanPdf);
+    pdfDownloadBtn.addEventListener("click", () => {
+      window.open(currentPrintUrl, "_blank", "noopener,noreferrer");
+    });
+
     excelFrame.addEventListener("load", hideLoader);
     window.addEventListener("resize", applyResponsiveScale);
 
