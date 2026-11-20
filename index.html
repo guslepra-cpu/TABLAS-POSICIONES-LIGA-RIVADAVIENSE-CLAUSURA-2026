@@ -136,8 +136,14 @@
       font-size: 0.95rem;
     }
 
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
     .zoom-btn {
-      padding: 5px 12px;
+      padding: 6px 12px;
       font-size: 0.78rem;
       font-weight: 600;
       color: var(--accent);
@@ -147,7 +153,21 @@
       cursor: pointer;
     }
 
-    /* Contenedor inteligente que adapta el tamaño en PC y Celular */
+    .pdf-btn {
+      padding: 6px 12px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #ffffff;
+      background: #16a34a;
+      border: 1px solid #15803d;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .pdf-btn:hover {
+      background: #15803d;
+    }
+
     .table-wrapper {
       width: 100%;
       overflow-x: hidden;
@@ -185,6 +205,44 @@
       .division-tabs { grid-template-columns: repeat(2, 1fr); }
       .board-card { padding: 8px; }
     }
+
+    /* Estilos limpios exclusivos al descargar o imprimir en PDF */
+    @media print {
+      @page {
+        size: landscape;
+        margin: 8mm;
+      }
+      body {
+        background: #ffffff;
+        padding: 0;
+      }
+      .controls-panel,
+      .action-buttons {
+        display: none !important;
+      }
+      header {
+        background: #0f172a !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        padding: 12px;
+        border-radius: 6px 6px 0 0;
+      }
+      .board-card {
+        border: none;
+        box-shadow: none;
+        padding: 8px 0;
+      }
+      .table-wrapper,
+      .scale-box {
+        width: 100% !important;
+        height: auto !important;
+        overflow: visible !important;
+      }
+      iframe {
+        transform: none !important;
+        width: 100% !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -214,7 +272,10 @@
     <main class="board-card">
       <div class="status-bar">
         <span class="current-title" id="currentViewTitle">Primera A — Tabla Zona A</span>
-        <button class="zoom-btn" id="zoomToggleBtn">Ampliar tamaño (100%)</button>
+        <div class="action-buttons">
+          <button class="zoom-btn" id="zoomToggleBtn">Ampliar tamaño (100%)</button>
+          <button class="pdf-btn" id="pdfDownloadBtn">Descargar PDF</button>
+        </div>
       </div>
 
       <div class="table-wrapper" id="tableWrapper">
@@ -233,7 +294,6 @@
     const BASE_URL = "https://1drv.ms/x/c/b90d047e400182f5/IQTXrfcP4AjlRqM54eRwl4MLAcgV_COvlDoyNlF1P03_2bk?em=2&wdAllowInteractivity=False&Item=";
     const PARAMS = "&wdHideGridlines=True&wdHideHeaders=True";
 
-    // Rangos amplios y dimensiones reales en píxeles de cada hoja para que nunca se recorte nada
     const DATA_VIEWS = {
       primeraA: [
         { label: "Tabla Zona A", sheet: "TABLA PRIMERA A ZONA A", range: "A1:L18", width: 840, height: 550 },
@@ -269,6 +329,7 @@
     const excelFrame = document.getElementById("excelFrame");
     const currentViewTitle = document.getElementById("currentViewTitle");
     const zoomToggleBtn = document.getElementById("zoomToggleBtn");
+    const pdfDownloadBtn = document.getElementById("pdfDownloadBtn");
 
     let currentDiv = "primeraA";
     let currentIndex = 0;
@@ -305,7 +366,9 @@
       document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.div === divKey));
       document.querySelectorAll(".sub-btn").forEach((btn, idx) => btn.classList.toggle("active", idx === index));
 
-      currentViewTitle.textContent = `${DIVISION_NAMES[divKey]} — ${item.label}`;
+      const fullTitle = `${DIVISION_NAMES[divKey]} — ${item.label}`;
+      currentViewTitle.textContent = fullTitle;
+      document.title = `${fullTitle} - Liga Rivadaviense`;
       applyResponsiveScale();
 
       const encodedSheet = encodeURIComponent(item.sheet);
@@ -333,6 +396,10 @@
     zoomToggleBtn.addEventListener("click", () => {
       fitToScreen = !fitToScreen;
       applyResponsiveScale();
+    });
+
+    pdfDownloadBtn.addEventListener("click", () => {
+      window.print();
     });
 
     window.addEventListener("resize", applyResponsiveScale);
