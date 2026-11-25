@@ -341,9 +341,7 @@
           <img id="loaderCrestImg" alt="Cargando Liga Rivadaviense">
           <span>Cargando planilla oficial...</span>
         </div>
-        <div class="scale-box" id="scaleBox">
-          <iframe id="excelFrame" scrolling="no"></iframe>
-        </div>
+        <div class="scale-box" id="scaleBox"></div>
       </div>
 
       <div class="pdf-help-bar">
@@ -398,7 +396,6 @@
     const subTabs = document.getElementById("subTabs");
     const tableWrapper = document.getElementById("tableWrapper");
     const scaleBox = document.getElementById("scaleBox");
-    const excelFrame = document.getElementById("excelFrame");
     const currentViewTitle = document.getElementById("currentViewTitle");
     const zoomToggleBtn = document.getElementById("zoomToggleBtn");
     const pdfDownloadBtn = document.getElementById("pdfDownloadBtn");
@@ -426,6 +423,8 @@
     function applyResponsiveScale() {
       const item = DATA_VIEWS[currentDiv][currentIndex];
       const availableWidth = tableWrapper.clientWidth;
+      const excelFrame = document.getElementById("excelFrame");
+      if (!excelFrame) return;
 
       excelFrame.style.width = item.width + "px";
       excelFrame.style.height = item.height + "px";
@@ -455,13 +454,22 @@
       const titleText = `${DIVISION_NAMES[divKey]} — ${item.label}`;
       currentViewTitle.textContent = titleText;
       document.title = `${titleText} - Liga Rivadaviense`;
-      applyResponsiveScale();
 
       showLoader();
       const encodedSheet = encodeURIComponent(item.sheet);
       const baseItemUrl = `${BASE_URL}'${encodedSheet}'!${item.range}`;
 
-      excelFrame.src = `${baseItemUrl}${PARAMS_EMBED}`;
+      // Destruir el iframe anterior y crear uno nuevo limpio evita que OneDrive mezcle escudos en caché
+      scaleBox.innerHTML = "";
+      const newFrame = document.createElement("iframe");
+      newFrame.id = "excelFrame";
+      newFrame.setAttribute("scrolling", "no");
+      newFrame.addEventListener("load", hideLoader);
+      scaleBox.appendChild(newFrame);
+
+      applyResponsiveScale();
+
+      newFrame.src = `${baseItemUrl}${PARAMS_EMBED}&_cb=${Date.now()}`;
       currentPrintUrl = `${baseItemUrl}${PARAMS_PRINT}`;
     }
 
@@ -492,7 +500,6 @@
       window.open(currentPrintUrl, "_blank", "noopener,noreferrer");
     });
 
-    excelFrame.addEventListener("load", hideLoader);
     window.addEventListener("resize", applyResponsiveScale);
 
     renderSubButtons("primeraA");
